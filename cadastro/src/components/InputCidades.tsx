@@ -23,7 +23,7 @@ export default function ({ uf }: props) {
 
     return <>
         {loading
-            ? "loading cidades"
+            ? <select><option style={{ textAlign: "center" }}>selecione um estado</option></select>
             : <select>{cidades.map(({ nome }, idx) => <option key={idx}>{nome}</option>)}</select>
         }
     </>
