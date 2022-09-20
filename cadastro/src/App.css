@@ -30,6 +30,7 @@ main {
   flex-direction: column;
   
   background-color: #e5e5e5;
+  border-radius: 2em;
 }
 
 h1 { 
@@ -42,3 +43,5 @@ input, select, option {
   background-color: #D9D9D9;
   color: #000000
 }
+
+
