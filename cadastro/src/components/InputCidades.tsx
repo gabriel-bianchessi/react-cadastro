@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 
 type props = {
     uf: string
+    cidade: string
+    setCidade: Dispatch<SetStateAction<string>>
 }
 
-export default function ({ uf }: props) {
+export default function ({ uf, cidade, setCidade }: props) {
     const [cidades, setCidades] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -22,9 +24,24 @@ export default function ({ uf }: props) {
     }, [uf])
 
     return <>
-        {loading
-            ? <select><option style={{ textAlign: "center" }}>selecione um estado</option></select>
-            : <select>{cidades.map(({ nome }, idx) => <option key={idx}>{nome}</option>)}</select>
-        }
+      {loading ? (
+        <select><option>Carregando</option></select>
+      ) : (
+        <select
+          onChange={(event) => setCidade(event.currentTarget.value)}
+          value={cidade}
+        >
+          {cidade == "" ? (
+            <option value="">
+              --Selecione {uf == "" ? "um Estado" : "uma Cidade"}--
+            </option>
+          ) : (
+            ""
+          )}
+          {cidades.map(({ nome }, idx) => (
+            <option key={idx}>{nome}</option>
+          ))}
+        </select>
+      )}
     </>
 }

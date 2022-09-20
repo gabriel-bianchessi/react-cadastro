@@ -1,7 +1,10 @@
-import { useState, KeyboardEventHandler } from "react"
+import { KeyboardEventHandler, SetStateAction, Dispatch } from "react"
 
-export default function() {
-    const [cep, setCep] = useState("")
+type props = {
+    setCep: Dispatch<SetStateAction<string>>
+}
+
+export default function({setCep}: props) {
     const controller = new AbortController()
 
     async function buscaCep(cep: string) {
@@ -18,6 +21,12 @@ export default function() {
             console.log('Consulta cancelada')
             return
         }
+
+        if(ev.key == "-") {
+          ev.stopPropagation()
+          ev.preventDefault()
+          return   
+        }
         
         if (ev.currentTarget.value.length >= 8) {
             ev.stopPropagation()
@@ -28,8 +37,7 @@ export default function() {
     
     const keyUp: KeyboardEventHandler<HTMLInputElement> = async ev => {     
         if (ev.currentTarget.value.length == 8) {
-            console.log("AAAA");
-
+            setCep(ev.currentTarget.value)            
         }
     }
 
