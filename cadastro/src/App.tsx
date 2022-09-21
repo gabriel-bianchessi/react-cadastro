@@ -16,7 +16,7 @@ function TesteReqComponent() {
 export default function () {
 
   return <>
-    <TesteReqComponent/>
+    {/* <TesteReqComponent/> */}
     <TabDadosDeEndereco />
   </>
 }

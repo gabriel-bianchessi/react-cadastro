@@ -65,40 +65,43 @@ export default function () {
 
   return (
     <>
-      <main>
-        <h1>Cadastro: Dados de Endereço</h1>
+      <div>
+        <h1>Cadastro</h1>
+        <h2>Dados de Endereço</h2>
         <input
           placeholder="CEP"
           onKeyUp={keyUpCep}
           onKeyDown={keyDownCep}
         ></input>
-        <InputEstados uf={uf} setUf={setUf} />
-        <InputCidades uf={uf} setCidade={setCidade} cidade={cidade} />
-        <input
-          name="bairro"
-          placeholder="Bairro"
-          defaultValue={bairro}
-          onKeyUp={x(setBairro)}
-        />
-        <input
-          name="rua"
-          placeholder="Rua"
-          defaultValue={rua}
-          onKeyUp={x(setRua)}
-        />
-        <input
-          name="numero"
-          placeholder="Número"
-          defaultValue={numero}
-          onKeyUp={x(setNumero)}
-        />
-        <input
-          name="complemento"
-          placeholder="Complemento"
-          defaultValue={complemento}
-          onKeyUp={x(setComplemento)}
-        />
-      </main>
+        <div className="info">
+          <InputEstados uf={uf} setUf={setUf} />
+          <InputCidades uf={uf} setCidade={setCidade} cidade={cidade} />
+          <input
+            name="bairro"
+            placeholder="Bairro"
+            defaultValue={bairro}
+            onKeyUp={x(setBairro)}
+          />
+          <input
+            name="rua"
+            placeholder="Rua"
+            defaultValue={rua}
+            onKeyUp={x(setRua)}
+          />
+          <input
+            name="numero"
+            placeholder="Número"
+            defaultValue={numero}
+            onKeyUp={x(setNumero)}
+          />
+          <input
+            name="complemento"
+            placeholder="Complemento"
+            defaultValue={complemento}
+            onKeyUp={x(setComplemento)}
+          />
+        </div>
+      </div>
     </>
   );
 }
