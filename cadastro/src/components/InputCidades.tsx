@@ -32,8 +32,8 @@ export default function ({ uf, cidade, setCidade }: props) {
           value={cidade}
         >
           {cidade == "" ? (
-            <option value="">
-              --Selecione {uf == "" ? "um Estado" : "uma Cidade"}--
+            <option value="" style={{ textAlign: "center" }}>
+              Selecione {uf == "" ? "um Estado" : "uma Cidade"}
             </option>
           ) : (
             ""
