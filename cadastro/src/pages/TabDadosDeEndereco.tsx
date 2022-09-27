@@ -25,6 +25,7 @@ export default function () {
       signal: controller.signal,
     });
     let result = await request.json();
+    console.log(result)
     console.log(result);
     setUf(result.uf);
     setCidade(result.localidade);
