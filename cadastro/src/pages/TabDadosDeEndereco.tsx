@@ -16,6 +16,9 @@ export default function () {
   const [rua, setRua] = useState("");
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const controller = new AbortController();
 
@@ -25,12 +28,12 @@ export default function () {
       signal: controller.signal,
     });
     let result = await request.json();
-    console.log(result)
+    console.log(result);
     console.log(result);
     setUf(result.uf);
     setCidade(result.localidade);
-    setBairro(result.bairro)
-    setRua(result.logradouro)
+    setBairro(result.bairro);
+    setRua(result.logradouro);
   }
 
   const keyDownCep: KeyboardEventHandler<HTMLInputElement> = async (ev) => {
@@ -60,14 +63,41 @@ export default function () {
     }
   };
 
-  function x(set: React.Dispatch<React.SetStateAction<string>>) {
+  function handleChange(set: React.Dispatch<React.SetStateAction<string>>) {
     return (event: any) => set(event.currentTarget.value);
+  }
+
+  async function handleSubmit(event: any) {
+    event.preventDefault();
+    const data = {
+      name,
+      email,
+      password,
+    }
+
+    let options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+    console.log(options)
+    
+    const request = await fetch('http://127.0.0.1:8080/api/teste', options) 
+    const result = await request.json()  
+    console.log(result)
   }
 
   return (
     <>
       <div>
         <h1>Cadastro</h1>
+        <h2>Dados Pessoais</h2>
+        <input placeholder="Nome" name="name" onChange={handleChange(setName)}/>
+        <input placeholder="E-mail" name="email" onChange={handleChange(setEmail)}/>
+        <input placeholder="Senha" name="password" onChange={handleChange(setPassword)}/>
+
         <h2>Dados de Endereço</h2>
         <input
           placeholder="CEP"
@@ -81,27 +111,29 @@ export default function () {
             name="bairro"
             placeholder="Bairro"
             defaultValue={bairro}
-            onKeyUp={x(setBairro)}
+            onKeyUp={handleChange(setBairro)}
           />
           <input
             name="rua"
             placeholder="Rua"
             defaultValue={rua}
-            onKeyUp={x(setRua)}
+            onKeyUp={handleChange(setRua)}
           />
           <input
             name="numero"
             placeholder="Número"
             defaultValue={numero}
-            onKeyUp={x(setNumero)}
+            onKeyUp={handleChange(setNumero)}
           />
           <input
             name="complemento"
             placeholder="Complemento"
             defaultValue={complemento}
-            onKeyUp={x(setComplemento)}
+            onKeyUp={handleChange(setComplemento)}
           />
         </div>
+
+        <button onClick={handleSubmit}>Enviar</button>
       </div>
     </>
   );
