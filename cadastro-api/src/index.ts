@@ -57,7 +57,7 @@ app.post('/api/user/', (req, res) => {
 
   let sql = `INSERT INTO user (name, email, password) VALUES (?,?,?)`
   let params = [name, email, password]
-  db.run(sql, params, function (err: any, result: any) {
+  db.run(sql, params, function (this: any, err: any, result: any) {
     if (err) {
       res.status(400).json({ "error": err?.message })
       return
@@ -68,8 +68,5 @@ app.post('/api/user/', (req, res) => {
       "id": this.lastID
     })
   }
-})
-
-app.listen(8080, () => {
-  console.log("⚙️ server running on http://127.0.0.1:8080");
+  )
 })
