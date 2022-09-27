@@ -70,3 +70,7 @@ app.post('/api/user/', (req, res) => {
   }
   )
 })
+
+app.listen(8080, () => {
+  console.log("⚙️ server running on http://127.0.0.1:8080");
+})
