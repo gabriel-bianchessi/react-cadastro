@@ -1,22 +1,25 @@
-import './App.css'
-import TabDadosDeEndereco from './pages/TabDadosDeEndereco'
-
-function TesteReqComponent() {
-  async function testeReq() {
-    const req = await fetch('/api')
-    const res = await req.json()
-    console.log(res)
-  }
-
-  return <>
-    <button onClick={testeReq}>Teste</button>
-  </>
-}
+import { Route, Routes, BrowserRouter } from "react-router-dom"
+import "./App.css"
+import HomePage from "./pages/HomePage"
+import Login from "./pages/Login"
+import TabCadastro from "./pages/TabCadastro"
+import PrivateRoutes from "./utils/PrivateRoute"
+import { CookiesProvider } from "react-cookie"
 
 export default function () {
-
-  return <>
-    {/* <TesteReqComponent/> */}
-    <TabDadosDeEndereco />
-  </>
+  return (
+    <>
+      <CookiesProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<PrivateRoutes />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
+            <Route path="/signup" element={<TabCadastro />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </CookiesProvider>
+    </>
+  )
 }

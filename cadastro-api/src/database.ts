@@ -11,6 +11,7 @@ const db = new Database("db.sqlite", (err) => {
       name      TEXT, 
       email     TEXT UNIQUE, 
       password  TEXT
+      sesId     TEXT
     )
   `,
     (err) => {

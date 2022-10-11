@@ -2,18 +2,28 @@ import express from "express"
 import { RunResult } from "sqlite3"
 import database from "./database"
 import cors from "cors"
+import { randomBytes } from 'crypto'
+import cookieparser from "cookie-parser"
+
 
 const port = 8080
 const app = express()
-const session: any = {}
-
-//
-app.use(express.json())
+app.use(cookieparser())
 app.use(cors())
+app.use('/', (req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080")
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+  res.setHeader("Access-Control-Allow-Credentials", "true")
+  next()
+})
+
+const session: {[key: string]: {user: string}} = {}
+
+app.use(express.json())
 
 app.post('/api/teste', (req, res) => {
-  console.log(req.body)
-  return res.json({ data: req.body })
+  return res.cookie('teste', 'teste', {httpOnly: false}).json({ data: req.body })
 })
 
 // STATIC
@@ -97,9 +107,7 @@ app.patch("/api/user/:id", (req, res) => {
    `
 
   database.run(
-    sql,
-    [name, email, password, req.params.id],
-    function (this: RunResult, err) {
+    sql,[name, email, password, req.params.id], function (this: RunResult, err) {
       if (err) {
         res.status(400).json({ error: err.message })
         return
@@ -127,31 +135,33 @@ app.delete("/api/user/:id", (req, res) => {
   })
 })
 
-app.post("/api/login/", (req, res) => {
+app.post("/api/login/", async (req, res) => {
   const sql = "SELECT id, name, email FROM user WHERE email=? AND password=?"
   const { email, password } = req.body
-
+  
   database.get(sql, [email, password], (err, row) => {
     if (err) {
       res.status(400).json({ error: err.message })
       return
     }
-
+    
     if (!row?.id) {
       res.status(404).json({ message: "user not found!" })
       return
     }
 
-    require("crypto").randomBytes(48, (err: any, buffer: any) => {
-      const token = buffer.toString("hex")
-      session[token] = row
-      res.json({ message: "success", sesid: token })
+    randomBytes(48, (err: any, buffer: any) => { 
+      const token: string = buffer.toString("hex")
+      session[token] = row 
+      res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080")
+      res.cookie("sesid", token,{ httpOnly: true }).json({message: "success", sesid: token})
     })
   })
 })
 
 app.post("/api/logged/:sesid", (req, res) => {
-  res.json(session[req.params.sesid] || "nada")
+  const { sesid } = req.cookies.sesid
+  res.json(sesid || "nada")
 })
 
 app.listen(port, () => console.log(`⚡ servidor ${port}`))
