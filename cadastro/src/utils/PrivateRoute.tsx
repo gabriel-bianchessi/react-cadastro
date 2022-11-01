@@ -1,15 +1,18 @@
-import { Route, Outlet, Navigate } from "react-router-dom"
-import { useCookies } from 'react-cookie'
+import {Outlet, Navigate } from "react-router-dom"
+import { PropsWithChildren } from "react"
 
-const PrivateRoutes = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['token'])
-  let auth = false
+interface PrivateRoutesProps {
+  logged: boolean | (() => void),
+  children: PropsWithChildren<any>
+}
 
-  if (cookies.token) {
-    console.log(cookies.token)
-  }
+const PrivateRoutes = ({logged, children}: PrivateRoutesProps) => {
 
-  return auth ? <Outlet /> : <Navigate to="/login" />
+  if (!logged) return <Navigate to="/login" />
+
+  return (
+    children
+  )
 }
 
 export default PrivateRoutes

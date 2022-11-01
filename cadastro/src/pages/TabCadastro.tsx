@@ -72,30 +72,10 @@ export default function () {
     return (event: any) => set(event.currentTarget.value)
   }
 
-  async function handleSubmit(event: MouseEvent<HTMLButtonElement>) {
-    event.preventDefault()
-    const data = {
-      name,
-      email,
-      password,
-    }
-
-    let options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-
-    const request = await fetch("http://127.0.0.1:8080/api/user", options)
-    const result = await request.json()
-    console.log(result)
-  }
 
   return (
     <>
-      <GenericForm formTitle="Cadastro">
+      <GenericForm formTitle="Cadastro" submitTo={"user"} redirectTo="login">
         <p>
           Já tem uma conta? Clique <Link to={"/login"}>aqusi</Link>
         </p>
@@ -149,7 +129,7 @@ export default function () {
           onKeyUp={handleChange(setComplemento)}
         />
 
-        <StyledButton title="Cadastrar" to="/login" clicked={handleSubmit} />
+        <StyledButton title="Cadastrar"/>
       </GenericForm>
     </>
   )

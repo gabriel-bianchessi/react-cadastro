@@ -8,19 +8,19 @@ import cookieparser from "cookie-parser"
 
 const port = 8080
 const app = express()
-app.use(cookieparser())
-app.use(cors())
-app.use('/', (req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080")
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-  res.setHeader("Access-Control-Allow-Credentials", "true")
-  next()
-})
-
-const session: {[key: string]: {user: string}} = {}
-
 app.use(express.json())
+app.use(cookieparser())
+app.use(cors({
+  origin: ["http://127.0.0.1:5173", "http://localhost:5173"],
+  credentials: true,
+  methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
+  exposedHeaders: ["*", "Authorization"],
+  allowedHeaders: ["*", "Authorization", "Content-Type"],
+}))
+
+
+const session: { [key: string]: string } = {}
+
 
 app.post('/api/teste', (req, res) => {
   return res.cookie('teste', 'teste', {httpOnly: false}).json({ data: req.body })
@@ -152,16 +152,34 @@ app.post("/api/login/", async (req, res) => {
 
     randomBytes(48, (err: any, buffer: any) => { 
       const token: string = buffer.toString("hex")
-      session[token] = row 
-      res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080")
-      res.cookie("sesid", token,{ httpOnly: true }).json({message: "success", sesid: token})
+      session[token] = row.email
+      res.cookie("sesid", token,{ httpOnly: true }).json({message: "success"})
     })
   })
 })
 
-app.post("/api/logged/:sesid", (req, res) => {
-  const { sesid } = req.cookies.sesid
-  res.json(sesid || "nada")
+app.post("/api/logged/", (req, res) => {
+  const sesid = req.cookies.sesid
+    
+  const userEmail = session[sesid]
+
+  if (!userEmail) {
+    return res.status(401).json({ message: "Unauthorized" })
+  }
+
+  database.get("SELECT id, name, email FROM user WHERE email=?", [userEmail], (err, row) => {
+    if (err) {
+      res.status(400).json({ error: err.message })
+      return
+    }
+    
+    if (!row?.id) {
+      res.status(404).json({ message: "user not found!" })
+      return
+    }
+
+    res.json({ message: "success", data: row })
+  })
 })
 
 app.listen(port, () => console.log(`⚡ servidor ${port}`))

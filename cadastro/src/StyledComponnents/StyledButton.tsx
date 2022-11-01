@@ -4,8 +4,6 @@ import styled from 'styled-components'
 
 interface IGenericButtonProps {
   title: string
-  to: string
-  clicked: MouseEventHandler<HTMLButtonElement>
 }
 
 export const Button = styled.button`
@@ -25,8 +23,6 @@ const StyledLink = styled(Link)`
 
 export default function StyledButton(props: IGenericButtonProps) {
   return (<> 
-    <Button>
-      <StyledLink to={props.to}>{props.title}</StyledLink>
-    </Button>
+    <Button>{props.title}</Button>
   </>)
 }
